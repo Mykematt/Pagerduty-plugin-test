@@ -1,0 +1,114 @@
+steps:
+  # Test 1: Job failure detection with default settings (check: job, severity: error)
+  - label: ":test_tube: Test 1 - Job Failure (Default Settings)"
+    key: "test-1"
+    command: |
+      echo "Testing default job failure detection..."
+      exit 1
+    plugins:
+      - incident-pagerduty#Ola-building:
+          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+
+  # Test 2: Job failure with critical severity
+  - label: ":fire: Test 2 - Job Failure (Critical Severity)"
+    key: "test-2"
+    depends_on: "test-1"
+    allow_dependency_failure: true
+    command: |
+      echo "Testing critical severity incident..."
+      exit 1
+    plugins:
+      - incident-pagerduty#Ola-building:
+          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          severity: critical
+
+  # Test 3: Job failure with warning severity
+  - label: ":warning: Test 3 - Job Failure (Warning Severity)"
+    key: "test-3"
+    depends_on: "test-2"
+    allow_dependency_failure: true
+    command: |
+      echo "Testing warning severity incident..."
+      exit 1
+    plugins:
+      - incident-pagerduty#Ola-building:
+          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          severity: warning
+
+  # Test 4: Job failure with custom dedup key (with retry to test deduplication)
+  - label: ":key: Test 4 - Job Failure (Custom Dedup Key + Retry)"
+    key: "test-4"
+    depends_on: "test-3"
+    allow_dependency_failure: true
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 2
+    command: |
+      echo "Testing custom deduplication key..."
+      echo "This will retry 2 times but should only create ONE incident (same dedup key)"
+      exit 1
+    plugins:
+      - incident-pagerduty#Ola-building:
+          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          dedup-key: "test-custom-dedup-${BUILDKITE_BUILD_NUMBER}"
+
+  # Test 5: Job failure with custom details
+  - label: ":memo: Test 5 - Job Failure (Custom Details)"
+    key: "test-5"
+    depends_on: "test-4"
+    allow_dependency_failure: true
+    command: |
+      echo "Testing custom details in incident..."
+      exit 1
+    plugins:
+      - incident-pagerduty#Ola-building:
+          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          custom-details:
+            environment: "test"
+            team: "platform"
+            service: "api-gateway"
+            version: "1.0.0"
+
+  # Test 6: Build failure detection (check: build)
+  # This step succeeds but detects that previous steps in the build have failed
+  - label: ":building_construction: Test 6 - Build Failure Detection"
+    key: "test-6"
+    depends_on: "test-5"
+    allow_dependency_failure: true
+    command: |
+      echo "This step succeeds, but checking if build is failing..."
+      echo "Previous steps have failed, so build status should be 'failing'"
+      echo "Plugin should detect build-level failure and create incident"
+    plugins:
+      - incident-pagerduty#Ola-building:
+          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          check: build
+
+  # Test 7: Both job and build failure detection (check: both)
+  - label: ":double_vertical_bar: Test 7 - Both Job & Build Detection"
+    key: "test-7"
+    depends_on: "test-6"
+    allow_dependency_failure: true
+    command: |
+      echo "Testing both job and build failure detection..."
+      exit 1
+    plugins:
+      - incident-pagerduty#Ola-building:
+          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          check: both
+
+  # Test 8: Success case - should NOT create incident
+  - label: ":white_check_mark: Test 8 - Success (No Incident Expected)"
+    key: "test-8"
+    depends_on: "test-7"
+    allow_dependency_failure: true
+    command: |
+      echo "This step succeeds - no incident should be created"
+      echo "Verifying plugin doesn't create false positives"
+    plugins:
+      - incident-pagerduty#Ola-building:
+          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+        
+secrets:
+  PAGERDUTY_INTEGRATION_KEY: pagerduty_integration_key
