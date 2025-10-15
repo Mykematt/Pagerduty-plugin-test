@@ -6,13 +6,11 @@ steps:
   - label: ":test_tube: Test 1 - Job Failure (Default Settings)"
     key: "test-1"
     command: |
-      echo "Installing curl..."
-      apt-get update && apt-get install -y curl || yum install -y curl || brew install curl || echo "curl already installed"
       echo "Testing default job failure detection..."
       exit 1
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
-          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          integration-key: ${PAGERDUTY_INTEGRATION_KEY}
 
   # Test 2: Job failure with critical severity
   - label: ":fire: Test 2 - Job Failure (Critical Severity)"
@@ -24,7 +22,7 @@ steps:
       exit 1
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
-          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          integration-key: ${PAGERDUTY_INTEGRATION_KEY}
           severity: critical
 
   # Test 3: Job failure with warning severity
@@ -37,7 +35,7 @@ steps:
       exit 1
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
-          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          integration-key: ${PAGERDUTY_INTEGRATION_KEY}
           severity: warning
 
   # Test 4: Job failure with custom dedup key (with retry to test deduplication)
@@ -55,7 +53,7 @@ steps:
       exit 1
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
-          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          integration-key: ${PAGERDUTY_INTEGRATION_KEY}
           dedup-key: "test-custom-dedup-${BUILDKITE_BUILD_NUMBER}"
 
   # Test 5: Job failure with custom details
@@ -68,7 +66,7 @@ steps:
       exit 1
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
-          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          integration-key: ${PAGERDUTY_INTEGRATION_KEY}
           custom-details:
             environment: "test"
             team: "platform"
@@ -87,7 +85,7 @@ steps:
       echo "Plugin should detect build-level failure and create incident"
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
-          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          integration-key: ${PAGERDUTY_INTEGRATION_KEY}
           check: build
 
   # Test 7: Both job and build failure detection (check: both)
@@ -100,7 +98,7 @@ steps:
       exit 1
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
-          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          integration-key: ${PAGERDUTY_INTEGRATION_KEY}
           check: both
 
   # Test 8: Success case - should NOT create incident
@@ -113,7 +111,7 @@ steps:
       echo "Verifying plugin doesn't create false positives"
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
-          integration_key: ${PAGERDUTY_INTEGRATION_KEY}
+          integration-key: ${PAGERDUTY_INTEGRATION_KEY}
         
 secrets:
   PAGERDUTY_INTEGRATION_KEY: pagerduty_integration_key
