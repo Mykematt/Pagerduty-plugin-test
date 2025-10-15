@@ -6,7 +6,7 @@ steps:
       echo "Testing default job failure detection..."
       exit 1
     plugins:
-      - incident-pagerduty#Ola-building:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
           integration_key: ${PAGERDUTY_INTEGRATION_KEY}
 
   # Test 2: Job failure with critical severity
@@ -18,7 +18,7 @@ steps:
       echo "Testing critical severity incident..."
       exit 1
     plugins:
-      - incident-pagerduty#Ola-building:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
           integration_key: ${PAGERDUTY_INTEGRATION_KEY}
           severity: critical
 
@@ -31,7 +31,7 @@ steps:
       echo "Testing warning severity incident..."
       exit 1
     plugins:
-      - incident-pagerduty#Ola-building:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
           integration_key: ${PAGERDUTY_INTEGRATION_KEY}
           severity: warning
 
@@ -49,7 +49,7 @@ steps:
       echo "This will retry 2 times but should only create ONE incident (same dedup key)"
       exit 1
     plugins:
-      - incident-pagerduty#Ola-building:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
           integration_key: ${PAGERDUTY_INTEGRATION_KEY}
           dedup-key: "test-custom-dedup-${BUILDKITE_BUILD_NUMBER}"
 
@@ -62,7 +62,7 @@ steps:
       echo "Testing custom details in incident..."
       exit 1
     plugins:
-      - incident-pagerduty#Ola-building:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
           integration_key: ${PAGERDUTY_INTEGRATION_KEY}
           custom-details:
             environment: "test"
@@ -81,7 +81,7 @@ steps:
       echo "Previous steps have failed, so build status should be 'failing'"
       echo "Plugin should detect build-level failure and create incident"
     plugins:
-      - incident-pagerduty#Ola-building:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
           integration_key: ${PAGERDUTY_INTEGRATION_KEY}
           check: build
 
@@ -94,7 +94,7 @@ steps:
       echo "Testing both job and build failure detection..."
       exit 1
     plugins:
-      - incident-pagerduty#Ola-building:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
           integration_key: ${PAGERDUTY_INTEGRATION_KEY}
           check: both
 
@@ -107,7 +107,7 @@ steps:
       echo "This step succeeds - no incident should be created"
       echo "Verifying plugin doesn't create false positives"
     plugins:
-      - incident-pagerduty#Ola-building:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#Ola-building:
           integration_key: ${PAGERDUTY_INTEGRATION_KEY}
         
 secrets:
