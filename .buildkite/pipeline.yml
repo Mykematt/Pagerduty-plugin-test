@@ -1,8 +1,13 @@
+agents:
+  queue: "mac"
+
 steps:
   # Test 1: Job failure detection with default settings (check: job, severity: error)
   - label: ":test_tube: Test 1 - Job Failure (Default Settings)"
     key: "test-1"
     command: |
+      echo "Installing curl..."
+      apt-get update && apt-get install -y curl || yum install -y curl || brew install curl || echo "curl already installed"
       echo "Testing default job failure detection..."
       exit 1
     plugins:
