@@ -32,7 +32,7 @@ steps:
   #     echo "Testing both job and build failure detection..."
   #     exit 1
   #   plugins:
-  #     - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#22898ca:
+  #     - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#73e5852:
   #         integration-key: ${INTEGRATION_KEY}
   #         check: both
 
@@ -43,7 +43,7 @@ steps:
       echo "This step succeeds - no incident should be created"
       echo "Verifying plugin doesn't create false positives"
     plugins:
-      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#22898ca:
+      - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#73e5852:
           integration-key: ${INTEGRATION_KEY}
         
 secrets:
