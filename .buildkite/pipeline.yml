@@ -4,10 +4,10 @@ agents:
 steps:
   - label: ":x: Simulated failing job"
     key: "fail-setup"
+    continue_on_failure: true
     command: |
       echo "Simulating a failing job to exercise build-level detection"
       exit 1
-    continue_on_failure: true
 
   - label: ":building_construction: Build Failure Detection"
     key: "test-1"
