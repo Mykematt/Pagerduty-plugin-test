@@ -4,13 +4,14 @@ agents:
 steps:
   - label: ":x: Simulated failing job"
     key: "fail-setup"
-    soft_fail: true
     command: |
       echo "Simulating a failing job to exercise build-level detection"
       exit 1
 
   - label: ":building_construction: Build Failure Detection"
     key: "test-1"
+    depends_on: "fail-setup"
+    allow_dependency_failure: true
     command: |
       echo "This step succeeds, but checking if build is failing..."
     plugins:
