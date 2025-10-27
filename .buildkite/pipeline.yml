@@ -2,7 +2,7 @@ agents:
   queue: "mac"
 
 steps:
-  - label: ":building_construction: Test 6 - Build Failure Detection"
+  - label: ":building_construction: Build Failure Detection"
     key: "test-1"
     command: |
       echo "This step succeeds, but checking if build is failing..."
@@ -12,7 +12,7 @@ steps:
           check: build
           debug: true
 
-  - label: ":white_check_mark: Test 8 - Success (No Incident Expected)"
+  - label: ":white_check_mark: Success (No Incident Expected)"
     key: "test-2"
     command: |
       echo "This step succeeds - no incident should be created"
