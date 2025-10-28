@@ -23,11 +23,12 @@ steps:
   - label: ":white_check_mark: Success (No Incident Expected)"
     key: "test-2"
     command: |
-      echo "This step succeeds - no incident should be created"
-      echo "Verifying plugin doesn't create false positives"
+      echo "This step intentionally fails to trigger job-level detection"
+      exit 1
     plugins:
       - https://github.com/buildkite-plugins/incident-pagerduty-buildkite-plugin.git#73e5852:
           integration-key: ${INTEGRATION_KEY}
+          check: job
         
 secrets:
   INTEGRATION_KEY: pagerduty_integration_key
